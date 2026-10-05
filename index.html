@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QCM Bases de données – Bac Sciences informatiques</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--tx:#1d2540;--mut:#667;--pri:#4f46e5;--pri2:#7c3aed;--ok:#16a34a;--ko:#dc2626;--bd:#e3e8f2;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#10142a;--card:#1a2040;--tx:#eef0ff;--mut:#9aa3c7;--bd:#2b3560}}
+:root[data-theme="dark"]{--bg:#10142a;--card:#1a2040;--tx:#eef0ff;--mut:#9aa3c7;--bd:#2b3560}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;line-height:1.5}
+.wrap{max-width:720px;margin:0 auto;padding:16px}
+header{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border-radius:18px;padding:18px 20px;margin-bottom:14px}
+header h1{margin:0;font-size:1.25rem}header p{margin:4px 0 0;opacity:.9;font-size:.9rem}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:18px;animation:in .35s ease}
+@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+label{display:block;font-weight:600;margin:12px 0 4px;font-size:.9rem}
+input{width:100%;padding:11px 12px;border-radius:10px;border:1px solid var(--bd);background:var(--bg);color:var(--tx);font-size:1rem}
+button{font:inherit;cursor:pointer}
+.btn{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;border:0;border-radius:12px;padding:12px 20px;font-weight:700;margin-top:16px;width:100%}
+.btn.sec{background:var(--bg);color:var(--tx);border:1px solid var(--bd)}
+.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden;margin-bottom:12px}.bar i{display:block;height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width .4s}
+.meta{display:flex;justify-content:space-between;font-size:.85rem;color:var(--mut);margin-bottom:6px}
+.lv{padding:2px 10px;border-radius:20px;font-size:.75rem;font-weight:700;color:#fff}.lv.f{background:#16a34a}.lv.m{background:#d97706}.lv.d{background:#dc2626}
+.q{font-size:1.1rem;font-weight:700;margin:10px 0 14px;white-space:pre-line}
+.opt{display:block;width:100%;text-align:start;padding:12px 14px;margin:8px 0;border-radius:12px;border:2px solid var(--bd);background:var(--bg);color:var(--tx);transition:.15s}
+.opt:hover:not(:disabled){border-color:var(--pri);transform:translateX(3px)}
+.opt.sel{border-color:var(--pri);background:color-mix(in srgb,var(--pri) 12%,var(--bg))}
+.rev{border:1px solid var(--bd);border-radius:12px;padding:12px;margin:10px 0}.rev.ok{border-inline-start:5px solid var(--ok)}.rev.ko{border-inline-start:5px solid var(--ko)}
+.rev small{color:var(--mut);display:block;margin-top:6px}
+.score{text-align:center}.score svg{width:150px;height:150px}.score b{font-size:1.6rem}
+table{width:100%;border-collapse:collapse;font-size:.85rem}th,td{padding:7px 6px;border-bottom:1px solid var(--bd);text-align:start}
+.scroll{overflow-x:auto}
+.tabs{display:flex;gap:8px;margin-bottom:12px}.tabs button{flex:1;padding:10px;border-radius:12px;border:1px solid var(--bd);background:var(--card);color:var(--tx);font-weight:600}.tabs .on{background:var(--pri);color:#fff;border-color:var(--pri)}
+.st{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:.8rem}.st span.b{flex:1;height:10px;background:var(--bd);border-radius:6px;overflow:hidden}.st span.b i{display:block;height:100%}
+.warn{background:#fef3c7;color:#78350f;border-radius:10px;padding:8px 12px;font-size:.85rem;margin-top:10px}
+</style></head><body><div class="wrap">
+<header><h1>🗄️ QCM – Bases de données</h1><p id="sub"></p></header>
+<div id="tabs" class="tabs"><button id="t1" class="on">Élève</button><button id="t2">👩‍🏫 Enseignante</button></div>
+<div id="app"></div>
+</div>
+<script>
+// [question, niveau(f/m/d), bonne réponse, 3 mauvaises, explication]
+const Q=[
+["Que signifie SGBD ?","f","Système de Gestion de Bases de Données",["Système Général de Banque de Données","Structure de Gestion des Données Brutes","Service de Gestion de Base Distribuée"],"Un SGBD (ex. MySQL, Access) permet de créer, interroger et administrer une base de données."],
+["Une ligne d'une relation (table) s'appelle :","f","un n-uplet (tuple)",["un attribut","un domaine","un schéma"],"Les colonnes sont des attributs ; les lignes sont des n-uplets."],
+["Quelle commande SQL permet de lire des données ?","f","SELECT",["INSERT","UPDATE","CREATE"],"SELECT interroge la base ; INSERT ajoute, UPDATE modifie, CREATE crée un objet."],
+["Qu'est-ce qu'une clé primaire ?","f","Un attribut (ou groupe) qui identifie de façon unique chaque n-uplet",["Un attribut qui peut contenir des doublons","Le premier attribut de la table","Un attribut obligatoirement numérique"],"La clé primaire est unique et non nulle ; elle n'est pas forcément numérique."],
+["Quelle clause SQL filtre les lignes selon une condition ?","f","WHERE",["ORDER BY","GROUP BY","FROM"],"WHERE filtre les lignes ; ORDER BY trie ; GROUP BY regroupe ; FROM indique la table."],
+["Quelle instruction ajoute un enregistrement ?","f","INSERT INTO",["ADD RECORD","UPDATE INTO","APPEND TABLE"],"La syntaxe est INSERT INTO table VALUES (...)."],
+["Qu'est-ce qu'une clé étrangère ?","m","Un attribut qui référence la clé primaire d'une autre table",["Une clé primaire d'une autre base","Un attribut qui n'accepte aucune valeur","Une clé composée de tous les attributs"],"Elle matérialise le lien entre deux tables."],
+["Que fait : SELECT * FROM Eleve ORDER BY note DESC ;","m","Affiche tous les élèves, de la meilleure note à la plus faible",["Affiche les élèves de la plus faible à la meilleure note","Supprime les élèves triés par note","Affiche seulement l'élève ayant la note maximale"],"DESC = ordre décroissant ; ASC (défaut) = croissant."],
+["Que renvoie SELECT COUNT(*) FROM Eleve ; ?","m","Le nombre de lignes de la table Eleve",["La somme des valeurs de la table","La première ligne de la table","Le nombre de colonnes de la table"],"COUNT(*) compte les lignes (n-uplets)."],
+["Quelle différence entre DELETE et DROP TABLE ?","m","DELETE supprime des lignes ; DROP TABLE supprime la table entière (structure comprise)",["Aucune, ce sont des synonymes","DELETE supprime la structure ; DROP supprime les lignes","DROP TABLE supprime seulement les doublons"],"DELETE est du LMD (données) ; DROP est du LDD (structure)."],
+["En algèbre relationnelle, quel opérateur choisit certaines colonnes ?","m","La projection",["La sélection (restriction)","La jointure","L'union"],"La sélection choisit des lignes, la projection choisit des colonnes."],
+["Quelle requête modifie correctement la note de l'élève n°5 ?","m","UPDATE Eleve SET note = 15 WHERE id = 5 ;",["UPDATE Eleve SET note = 15 ;","MODIFY Eleve note = 15 WHERE id = 5 ;","SET Eleve.note = 15 WHERE id = 5 ;"],"Sans WHERE, UPDATE modifierait TOUTES les lignes."],
+["À quoi sert GROUP BY ?","m","À regrouper les lignes de même valeur pour appliquer une fonction d'agrégat",["À trier le résultat","À supprimer les doublons uniquement","À joindre deux tables"],"Ex. : SELECT classe, AVG(note) FROM Eleve GROUP BY classe."],
+["Que signifie la dépendance fonctionnelle A → B ?","d","Chaque valeur de A détermine une seule valeur de B",["A et B ont toujours la même valeur","B détermine A mais pas l'inverse","A est une clé étrangère de B"],"Si deux n-uplets ont la même valeur de A, ils ont la même valeur de B."],
+["Différence entre WHERE et HAVING ?","d","WHERE filtre les lignes avant le regroupement ; HAVING filtre les groupes après GROUP BY",["HAVING filtre les lignes avant GROUP BY","Les deux sont identiques","WHERE s'utilise uniquement avec COUNT"],"HAVING peut utiliser des fonctions d'agrégat (ex. HAVING COUNT(*) > 5), pas WHERE."],
+["Avec MySQL, que renvoie la requête : SELECT DATEDIFF('2026-06-15', '2026-06-01') ;","d","14",["-14","2026","Une erreur de syntaxe, car les deux dates sont différentes"],"DATEDIFF(date1, date2) renvoie date1 − date2 en nombre de jours : 15 juin − 1er juin = 14. Le résultat serait négatif (-14) si les deux dates étaient inversées."],
+["Quel rôle joue l'intégrité référentielle ?","d","Empêcher qu'une clé étrangère contienne une valeur absente de la clé primaire référencée",["Empêcher les doublons dans toute la table","Interdire les valeurs NULL partout","Trier automatiquement les tables liées"],"On ne peut pas, par exemple, inscrire un élève dans une classe inexistante."],
+["Dans le modèle relationnel, comment traduit-on une association 1,N entre CLASSE (1) et ELEVE (N) ?","d","La clé primaire de CLASSE devient clé étrangère dans ELEVE",["La clé primaire d'ELEVE devient clé étrangère dans CLASSE","On crée toujours une table associative sans autre attribut","On fusionne CLASSE et ELEVE en une seule table"],"La clé étrangère se place du côté « N » (plusieurs)."],
+["Que renvoie : SELECT classe, COUNT(*) FROM Eleve GROUP BY classe HAVING COUNT(*) > 25 ;","d","Les classes de plus de 25 élèves avec leur effectif",["Tous les élèves de plus de 25 ans","Le nombre total d'élèves s'il dépasse 25","Les 25 premiers élèves de chaque classe"],"On regroupe par classe, puis HAVING ne garde que les groupes dont l'effectif dépasse 25."],
+["Un vol est identifié par le numéro d'appareil, la date et l'heure de départ pris ensemble. De quel type de clé s'agit-il ?","m","Une clé primaire composée",["Une clé étrangère","Une clé primaire simple","Une contrainte de domaine"],"Quand un seul attribut ne suffit pas à identifier un n-uplet, on combine plusieurs attributs : c'est une clé primaire composée."],
+["Quelle commande permet de modifier le type d'une colonne existante (ex. de INT à VARCHAR) ?","m","ALTER TABLE ... ALTER COLUMN ... (ou MODIFY selon le SGBD)",["UPDATE TABLE ... SET ...","MODIFY DATABASE ...","DROP COLUMN ..."],"ALTER TABLE modifie la structure d'une table. UPDATE modifie des données ; DROP COLUMN supprime une colonne."],
+["Quel type SQL convient pour stocker un prix avec deux décimales (ex. 145.75) ?","f","DECIMAL(10, 2)",["INT","CHAR(10)","TIME"],"DECIMAL(10,2) : 10 chiffres au total dont 2 après la virgule. INT n'accepte pas de partie décimale."],
+["Quelle définition empêche un solde négatif lors de la création de la table ?","m","Solde DECIMAL(12,3) CHECK (Solde >= 0)",["Solde INT NOT NULL","Solde INT DEFAULT 0","Solde PRIMARY KEY"],"CHECK rejette toute valeur qui ne vérifie pas la condition. NOT NULL interdit seulement l'absence de valeur."],
+["Quand on supprime une ligne de la table parente, on veut supprimer automatiquement les lignes liées de la table enfant. Quelle option choisir pour la clé étrangère ?","d","ON DELETE CASCADE",["ON UPDATE CASCADE","ON DELETE SET NULL","AUTO_INCREMENT"],"ON DELETE CASCADE propage la suppression ; SET NULL mettrait seulement la clé étrangère à NULL."],
+["Comment afficher les voitures dont la couleur n'est pas renseignée ?","f","WHERE Couleur IS NULL",["WHERE Couleur = 0","WHERE Couleur = 'NULL'","WHERE Couleur = NULL"],"NULL signifie « valeur absente » : on le teste avec IS NULL, jamais avec =."],
+["Quel motif LIKE trouve les noms se terminant par la lettre « A » ?","m","LIKE '%A'",["LIKE 'A%'","LIKE '_A_'","LIKE '%A%'"],"% remplace n'importe quelle suite de caractères. '%A' = se termine par A ; 'A%' = commence par A ; '%A%' = contient A."],
+["Quelle fonction d'agrégation donne la note la plus élevée d'une colonne ?","f","MAX()",["MIN()","SUM()","AVG()"],"MAX() renvoie la plus grande valeur, MIN() la plus petite, SUM() la somme et AVG() la moyenne."],
+["Pour afficher le nom de chaque auteur avec les titres de ses livres (IdAuteur est commun aux tables Auteurs et Livres), on utilise :","m","Une jointure",["Un filtrage","Une sous-requête","Une normalisation"],"La jointure combine les lignes de deux tables à partir d'un champ commun (clé primaire = clé étrangère)."],
+["Quelle fonction renvoie la date et l'heure actuelles (AAAA-MM-JJ HH:MM:SS) ?","f","NOW()",["DATE()","YEAR()","DAY()"],"NOW() donne la date et l'heure ensemble ; YEAR() ne donne que l'année et DAY() que le jour."],
+["Quand utilise-t-on une sous-requête dans une condition WHERE ?","d","Quand la condition de la requête principale dépend d'un résultat calculé par une autre requête",["Pour trier les données par ordre alphabétique","Pour supprimer une table entière","Pour accélérer la connexion à la base"],"Ex. : WHERE note > (SELECT AVG(note) FROM Eleve) : la valeur de comparaison vient de la sous-requête."],
+["Dans SELECT CodeProf, NomProf, Grade FROM Professeurs ORDER BY 3 ASC ; que représente le 3 ?","d","La 3e colonne du SELECT (Grade) : le tri se fait sur elle",["L'affichage est répété 3 fois","Seuls les 3 premiers professeurs sont affichés","Les professeurs dont le code est 3"],"Dans ORDER BY, un nombre désigne la position de la colonne dans le SELECT : 1 = CodeProf, 2 = NomProf, 3 = Grade."]
+];
+Q.sort((a,b)=>"fmd".indexOf(a[1])-"fmd".indexOf(b[1]));
+const LV={f:"Facile",m:"Moyen",d:"Difficile"};
+const $=s=>document.querySelector(s),app=$("#app");
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let st={stu:null,i:0,opts:[],ans:[],sel:null};
+
+const DUR=Q.length*60,SK="qcmState2_v"+Q.length;
+let cur=1,iv=null;
+const save=()=>{try{localStorage.setItem(SK,JSON.stringify(st))}catch(e){}};
+function init(){let x=null;try{x=JSON.parse(localStorage.getItem(SK)||"null")}catch(e){}
+ if(x&&x.stu){st=x;if(st.done){show();return}st.i=st.ans.length;if(Date.now()>=st.end){finish(true);return}startTimer();ask();return}
+ regForm()}
+function startTimer(){clearInterval(iv);iv=setInterval(tick,500)}
+function tick(){const r=Math.max(0,Math.round((st.end-Date.now())/1000)),el=$("#tm");
+ if(el){el.textContent="⏱ "+String(r/60|0).padStart(2,"0")+":"+String(r%60).padStart(2,"0");el.style.color=r<120?"var(--ko)":"inherit"}
+ if(r<=0&&!st.done)finish(true)}
+function regForm(){
+ app.innerHTML=`<div class="card"><h2 style="margin-top:0">Inscription</h2>
+ <label>Nom</label><input id="n" autocomplete="family-name">
+ <label>Prénom</label><input id="p" autocomplete="given-name">
+ <label>Groupe</label><div style="display:flex;gap:8px"><button type="button" class="opt" data-g="1" style="text-align:center;margin:0">Groupe 1</button><button type="button" class="opt" data-g="2" style="text-align:center;margin:0">Groupe 2</button></div>
+ <label>Adresse e-mail</label><input id="e" type="email" autocomplete="email">
+ <div class="warn" style="background:#e0e7ff;color:#1e1b4b">⏱ <b>${DUR/60} minutes</b> pour répondre aux ${Q.length} questions · <b>une seule tentative</b>. Le chrono démarre dès que tu cliques sur « Commencer » et ne s'arrête pas si tu quittes la page.</div>
+ <div id="err" class="warn" hidden></div>
+ <button class="btn" id="go">Commencer le QCM 🚀</button></div>`;
+ let g="";app.querySelectorAll("[data-g]").forEach(b=>b.onclick=()=>{app.querySelectorAll("[data-g]").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");g=b.dataset.g});
+ $("#go").onclick=()=>{
+  const n=$("#n").value.trim(),p=$("#p").value.trim(),e=$("#e").value.trim(),er=$("#err");
+  const msg=n.length<2?"Entrez votre nom.":p.length<2?"Entrez votre prénom.":!g?"Choisissez votre groupe.":!/^\S+@\S+\.\S+$/.test(e)?"Entrez une adresse e-mail valide.":"";
+  if(msg){er.textContent=msg;er.hidden=false;return}
+  st={stu:{n,p,g,e},i:0,ans:[],sel:null,opts:Q.map(q=>shuffle([q[2],...q[3]])),end:Date.now()+DUR*1000,done:false};
+  save();startTimer();ask();
+ };
+}
+function ask(){
+ const q=Q[st.i],o=st.opts[st.i];st.sel=null;
+ app.innerHTML=`<div class="card"><div class="meta"><span>Question ${st.i+1} / ${Q.length}</span><b id="tm"></b><span class="lv ${q[1]}">${LV[q[1]]}</span></div>
+ <div class="bar"><i style="width:${st.i/Q.length*100}%"></i></div>
+ <div class="q">${esc(q[0])}</div>
+ ${o.map((t,k)=>`<button class="opt" data-k="${k}">${esc(t)}</button>`).join("")}
+ <button class="btn" id="nx" disabled>${st.i==Q.length-1?"Terminer ✅":"Suivant →"}</button></div>`;
+ app.querySelectorAll(".opt").forEach(b=>b.onclick=()=>{
+  app.querySelectorAll(".opt").forEach(x=>x.classList.remove("sel"));b.classList.add("sel");st.sel=+b.dataset.k;$("#nx").disabled=false});
+ $("#nx").onclick=()=>{st.ans.push(st.opts[st.i][st.sel]);st.i++;save();if(st.i<Q.length)ask();else finish()};
+ tick();
+}
+function finish(timeout){
+ if(st.done)return;clearInterval(iv);
+ while(st.ans.length<Q.length)st.ans.push(null);
+ const ok=st.ans.map((x,i)=>x===Q[i][2]?1:0),score=ok.reduce((t,x)=>t+x,0);
+ st.ok=ok;st.score=score;st.done=true;st.timeout=!!timeout;
+ const o={n:st.stu.n,p:st.stu.p,g:st.stu.g,e:st.stu.e,s:score,o:ok.join(""),t:new Date().toISOString().slice(0,16)};
+ st.code="QCM1:"+btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+ save();if(cur==1)show();
+}
+function copyEl(el,btn){el.select();let p;try{p=navigator.clipboard.writeText(el.value)}catch(e){}
+ try{document.execCommand("copy")}catch(e){}
+ const t=btn.textContent;btn.textContent="✔ Copié";setTimeout(()=>btn.textContent=t,1500)}
+function show(){
+ const {score,ok}=st,p=score/Q.length,C=2*Math.PI*60,emo=p>=.75?"🎉":p>=.5?"👍":"💪";
+ const msg=encodeURIComponent("Résultat QCM bases de données :\n"+st.code);
+ app.innerHTML=`<div class="card score"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="60" fill="none" stroke="var(--bd)" stroke-width="14"/>
+ <circle cx="75" cy="75" r="60" fill="none" stroke="${p>=.5?"var(--ok)":"var(--ko)"}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C}" transform="rotate(-90 75 75)"><animate attributeName="stroke-dashoffset" from="${C}" to="${C*(1-p)}" dur="1s" fill="freeze"/></circle>
+ <text x="75" y="85" text-anchor="middle" font-size="26" font-weight="800" fill="currentColor">${score}/${Q.length}</text></svg>
+ <div><b>${emo} ${esc(st.stu.p+" "+st.stu.n)}</b> · Groupe ${esc(st.stu.g)}</div>${st.timeout?'<p style="color:var(--ko)">⏰ Temps écoulé : les questions sans réponse comptent 0.</p>':""}
+ <p style="color:var(--mut)">Soit <b>${(score/Q.length*20).toFixed(1)}/20</b><br>${["f","m","d"].map(l=>LV[l]+" "+Q.reduce((t,q,i)=>t+(q[1]==l&&ok[i]),0)+"/"+Q.filter(q=>q[1]==l).length).join(" · ")}</p>
+ <div class="warn" style="background:#e0e7ff;color:#1e1b4b;text-align:start">📨 <b>Envoie ce code à ton enseignante</b> pour qu'elle reçoive ton résultat :
+ <textarea id="cd" readonly rows="3" style="width:100%;margin-top:6px;font-size:.7rem;border-radius:8px;border:1px solid var(--bd);padding:6px">${st.code}</textarea>
+ <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px"><button class="btn sec" id="cp" style="margin:0;flex:1;width:auto">📋 Copier</button>
+ <a class="btn sec" style="margin:0;flex:1;text-align:center;text-decoration:none" href="https://wa.me/?text=${msg}" target="_blank" rel="noopener">WhatsApp</a>
+ <a class="btn sec" style="margin:0;flex:1;text-align:center;text-decoration:none" href="mailto:?subject=${encodeURIComponent("Résultat QCM – "+st.stu.n+" "+st.stu.p+" (G"+st.stu.g+")")}&body=${msg}">E-mail</a></div></div>
+ </div><h3>Correction détaillée</h3>
+ ${Q.map((q,i)=>`<div class="rev ${ok[i]?"ok":"ko"}"><b>${i+1}. ${esc(q[0])}</b><br>${ok[i]?"✅":"❌"} Ta réponse : ${st.ans[i]==null?"<i>sans réponse</i>":esc(st.ans[i])}${ok[i]?"":`<br>✔ Bonne réponse : <b>${esc(q[2])}</b>`}<small>💡 ${esc(q[4])}</small></div>`).join("")}
+ <p style="text-align:center;color:var(--mut);font-size:.85rem">Une seule tentative est autorisée.</p>`;
+ $("#cp").onclick=e=>copyEl($("#cd"),e.target);scrollTo(0,0);
+}
+// ---- Espace enseignant : on colle les codes reçus des élèves ----
+const KEY="qcmCodes";
+const lsGet=()=>{try{return JSON.parse(localStorage.getItem(KEY)||"[]")}catch(e){return[]}};
+const lsSet=v=>{try{localStorage.setItem(KEY,JSON.stringify(v))}catch(e){}};
+const dec=c=>{try{const o=JSON.parse(decodeURIComponent(escape(atob(c.trim().replace(/^QCM1:/,"")))));
+ if(typeof o.n!="string"||typeof o.o!="string"||typeof o.p!="string"||!o.g||o.o.length<5)return null;return o}catch(e){return null}};
+let codes=lsGet(),gf="all";
+function teacher(){
+ app.innerHTML=`<div class="card"><h2 style="margin-top:0">Espace enseignant</h2>
+ <p style="color:var(--mut);font-size:.9rem">Collez ici les codes reçus des élèves (un par ligne ou tous ensemble).</p>
+ <textarea id="pz" rows="4" placeholder="QCM1:..." style="width:100%;border-radius:10px;border:1px solid var(--bd);padding:8px;background:var(--bg);color:var(--tx)"></textarea>
+ <div id="msg" class="warn" hidden></div>
+ <button class="btn" id="add">Ajouter au rapport</button>
+ <button class="btn sec" id="clr">Vider la liste</button></div><div id="rep"></div>`;
+ $("#add").onclick=()=>{
+  const found=($("#pz").value.match(/QCM1:[A-Za-z0-9+\/=]+/g)||[]);let ok=0,bad=0;
+  found.forEach(c=>{if(dec(c)){if(!codes.includes(c))codes.push(c);ok++}else bad++});
+  lsSet(codes);$("#pz").value="";const m=$("#msg");m.hidden=false;
+  m.textContent=found.length?ok+" code(s) valide(s)"+(bad?", "+bad+" invalide(s)":"")+".":"Aucun code détecté.";report()};
+ $("#clr").onclick=()=>{if(confirm("Vider tous les résultats enregistrés sur cet appareil ?")){codes=[];lsSet(codes);report()}};
+ report();
+}
+function report(){
+ let old=0;const map={};codes.forEach(c=>{const o=dec(c);if(o&&o.o.length!=Q.length)old++;else if(o){const k=o.e.toLowerCase();if(!map[k]||o.t<map[k].t)map[k]=o}});
+ const rows=Object.values(map).map(o=>({name:o.n,prenom:o.p,g:o.g,email:o.e,score:o.s,ok:o.o.split("").map(Number),t:o.t})).filter(r=>gf=="all"||r.g==gf).sort((a,b)=>b.score-a.score);
+ const R=$("#rep"),n=rows.length;
+ const sel=`<div class="card" style="margin-top:12px">Afficher : <select id="gf" style="padding:8px;border-radius:8px;border:1px solid var(--bd);background:var(--bg);color:var(--tx)">${[["all","Tous les groupes"],["1","Groupe 1"],["2","Groupe 2"]].map(([v,l])=>`<option value="${v}"${v==gf?" selected":""}>${l}</option>`).join("")}</select></div>`;
+ const wire=()=>{$("#gf").onchange=e=>{gf=e.target.value;report()}};
+ if(!n){R.innerHTML=sel+(old?`<div class="warn">${old} code(s) d'une ancienne version du QCM ignoré(s).</div>`:"");wire();return}
+ const avg=(rows.reduce((t,r)=>t+r.score,0)/n/Q.length*20).toFixed(1),N=Q.length;
+ R.innerHTML=sel+`<div class="card" style="margin-top:12px"><h3 style="margin-top:0">Rapport ${gf=="all"?"de la classe":"du groupe "+gf}</h3>
+ <p><b>${n}</b> élève(s) · moyenne <b>${avg}/20</b> · max <b>${rows[0].score}/${N}</b> · min <b>${rows[n-1].score}/${N}</b>${old?`<br><small>${old} code(s) d'une ancienne version du QCM ignoré(s).</small>`:""}</p>
+ <div class="scroll"><table><tr><th>Nom</th><th>Prénom</th><th>Groupe</th><th>E-mail</th><th>Note</th><th>/20</th></tr>
+ ${rows.map(r=>`<tr><td>${esc(r.name)}</td><td>${esc(r.prenom)}</td><td>${esc(r.g)}</td><td>${esc(r.email)}</td><td><b>${r.score}/${N}</b></td><td>${(r.score/N*20).toFixed(1)}</td></tr>`).join("")}</table></div></div>
+ <div class="card" style="margin-top:12px"><h3 style="margin-top:0">Réussite par question</h3>
+ ${Q.map((q,i)=>{const r=Math.round(rows.reduce((t,x)=>t+(x.ok[i]||0),0)/n*100);return`<div class="st"><span style="width:62px">Q${i+1} <span class="lv ${q[1]}" style="padding:0 6px">${LV[q[1]][0]}</span></span><span class="b"><i style="width:${r}%;background:${r>=60?"var(--ok)":r>=40?"#d97706":"var(--ko)"}"></i></span><b style="width:38px">${r}%</b></div>`}).join("")}</div>
+ <div class="card" style="margin-top:12px"><h3 style="margin-top:0">Export (Excel / Google Sheets)</h3>
+ <textarea id="csv" readonly rows="4" style="width:100%;font-size:.7rem;border-radius:8px;border:1px solid var(--bd);padding:6px">${esc("Nom;Prénom;Groupe;Email;Note;Note sur 20;"+Q.map((_,i)=>"Q"+(i+1)).join(";")+"\n"+rows.map(r=>[r.name,r.prenom,r.g,r.email,r.score,(r.score/N*20).toFixed(1),...r.ok].join(";")).join("\n"))}</textarea>
+ <button class="btn sec" id="cc">📋 Copier le tableau</button></div>`;
+ $("#cc").onclick=e=>copyEl($("#csv"),e.target);wire();
+}
+function tab(k){cur=k;$("#t1").classList.toggle("on",k==1);$("#t2").classList.toggle("on",k==2);k==1?(st.done?show():st.stu?ask():regForm()):teacher()}
+$("#t1").onclick=()=>tab(1);$("#t2").onclick=()=>tab(2);
+$("#sub").textContent="Bac Sciences informatiques · "+Q.length+" questions · "+DUR/60+" minutes";
+init();
+</script></body></html>
